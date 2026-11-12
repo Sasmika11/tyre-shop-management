@@ -6,18 +6,17 @@ const Header = () => {
     return (
         <header className="app-header">
             {/* Main Header Container aligned with the panels below */}
-            <div style={{ display: 'flex', flex: 1, gap: '8px' }}>
+            <div style={{ display: 'flex', flex: 1, alignItems: 'center' }}>
                 
-                {/* Left Side: Matches the width of the Supplier List panel */}
-                {/* NOTE: If your .left-panel is 360px or 450px, make sure this width matches exactly! */}
+                {/* Left Side: Tyre Shop Management System */}
                 <div style={{ width: '450px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Settings size={18} />
                     <span style={{ fontSize: '15px', fontWeight: '600' }}>Tyre Shop Management System</span>
                 </div>
                 
-                {/* Right Side: Aligns perfectly above the Supplier Details panel */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ width: '1px', height: '18px', backgroundColor: 'rgba(255,255,255,0.4)' }}></div>
+                {/* Right Side: Supplier Management - Moved further right */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: '240px' }}>
+                    <div style={{ width: '1px', height: '18px', backgroundColor: 'rgba(255,255,255,0.4)', marginRight: '15px' }}></div>
                     <Users size={18} />
                     <span style={{ fontSize: '15px', fontWeight: '600' }}>Supplier Management</span>
                 </div>

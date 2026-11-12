@@ -165,7 +165,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .data-table th {
-  background-color: #f0f0f0;
+  background-color: #d6d6d6;
   border-top: 1px solid var(--border-color);
   border-bottom: 2px solid var(--border-color);
   border-right: 1px solid var(--border-color);
@@ -263,24 +263,30 @@ input[type="text"], input[type="email"], select, input[type="number"], textarea 
 
 /* Footer Actions */
 .app-footer {
-  background-color: #f4f4f4;
-  padding: 8px 10px;
+  background-color: #f8f9fa;
+  padding: 10px 20px; 
   border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+/* Styling for New, Save, Update, Delete, Clear, Print, Close buttons */
 .action-btn {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 25px;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 4px;
   color: white;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 13px;
+  min-width: 125px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: background-color 0.2s;
 }
 
 .action-btn:disabled {
@@ -288,15 +294,51 @@ input[type="text"], input[type="email"], select, input[type="number"], textarea 
   cursor: not-allowed;
 }
 
-/* Main Footer Buttons (Deep Colors) */
-.btn-nav { background-color: #fff; color: #333; border: 1px solid #ccc; }
+/* Stacked Nav Buttons (First, Previous, Next, Last) */
+.btn-nav-stacked {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center;
+  gap: 4px; 
+  background-color: #ffffff; 
+  color: #333; 
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 11px;
+  min-width: 95px; 
+  padding: 8px 15px; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: background-color 0.2s;
+}
+
+.btn-nav-stacked:hover { 
+  background-color: #eee; 
+}
+
+/* Specific colors and hover effects for main action buttons */
+.btn-nav { background-color: #ffffff; color: #333; border: 1px solid #ccc; }
 .btn-nav:hover:not(:disabled) { background-color: #eee; }
-.btn-new { background-color: #1a9e3f; border-color: #1a9e3f; }
-.btn-save { background-color: #0b66c2; border-color: #0b66c2; }
-.btn-update { background-color: #f58220; border-color: #f58220; }
-.btn-delete { background-color: #e53935; border-color: #e53935; }
+
+.btn-new { background-color: #28a745; border-color: #28a745; }
+.btn-new:hover { background-color: #218838; }
+
+.btn-save { background-color: #043c77; border-color: #007bff; }
+.btn-save:hover { background-color: #043c77; }
+
+.btn-update { background-color: #fd7e14; border-color: #fd7e14; }
+.btn-update:hover { background-color: #e27113; }
+
+.btn-delete { background-color: #dc3545; border-color: #dc3545; }
+.btn-delete:hover:not(:disabled) { background-color: #c82333; }
+
 .btn-clear { background-color: #6c757d; border-color: #6c757d; }
-.btn-print { background-color: #4a4a4a; border-color: #4a4a4a; }
+.btn-clear:hover { background-color: #5a6268; }
+
+.btn-print { background-color: #6c757d; border-color: #6c757d; }
+.btn-print:hover:not(:disabled) { background-color: #5a6268; }
 
 /* Match Tab Header exactly as the Original Image */
 .tabs-header-container {
@@ -350,6 +392,7 @@ input[type="text"], input[type="email"], select, input[type="number"], textarea 
   opacity: 0.5;
   cursor: not-allowed;
 }
+
 
 .tab-btn-add { background-color: #28a745; border: 1px solid #28a745; }
 .tab-btn-edit { background-color: #0d6efd; border: 1px solid #0d6efd; } 

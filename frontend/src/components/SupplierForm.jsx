@@ -1,4 +1,3 @@
-// frontend/src/components/SupplierForm.jsx
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { User, Search, Upload, Trash2 } from 'lucide-react';
 import { supplierService } from '../services/supplierService';
@@ -16,33 +15,22 @@ const SupplierForm = forwardRef(({ selectedId, onSuccess }, ref) => {
     const [logoPreview, setLogoPreview] = useState(null);
 
     useImperativeHandle(ref, () => ({
-        clearForm,
-        handleSave,
-        handleUpdate,
-        handleDelete
+        clearForm, handleSave, handleUpdate, handleDelete
     }));
 
     const clearForm = async () => {
         setFormData(initialFormData);
         setLogoFile(null);
         setLogoPreview(null);
-        // Auto-generate next code for new entries
         try {
             const res = await supplierService.generateCode();
-            if (res.status === 'success') {
-                setFormData(prev => ({ ...prev, supplier_code: res.data }));
-            }
-        } catch (err) {
-            console.error(err);
-        }
+            if (res.status === 'success') setFormData(prev => ({ ...prev, supplier_code: res.data }));
+        } catch (err) { console.error(err); }
     };
 
     useEffect(() => {
-        if (selectedId) {
-            loadSupplierData(selectedId);
-        } else {
-            clearForm();
-        }
+        if (selectedId) loadSupplierData(selectedId);
+        else clearForm();
     }, [selectedId]);
 
     const loadSupplierData = async (id) => {
@@ -52,31 +40,21 @@ const SupplierForm = forwardRef(({ selectedId, onSuccess }, ref) => {
                 setFormData(res.data);
                 setLogoPreview(res.data.logo_path ? `http://localhost/tyre-shop-backend/${res.data.logo_path}` : null);
             }
-        } catch (err) {
-            console.error("Error loading supplier:", err);
-        }
+        } catch (err) { console.error(err); }
     };
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? (checked ? 1 : 0) : value
-        }));
+        setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? (checked ? 1 : 0) : value }));
     };
 
     const handleLogoChange = (e) => {
         const file = e.target.files[0];
-        if (file) {
-            setLogoFile(file);
-            setLogoPreview(URL.createObjectURL(file));
-        }
+        if (file) { setLogoFile(file); setLogoPreview(URL.createObjectURL(file)); }
     };
 
     const removeLogo = () => {
-        setLogoFile(null);
-        setLogoPreview(null);
-        setFormData(prev => ({ ...prev, logo_path: '' }));
+        setLogoFile(null); setLogoPreview(null); setFormData(prev => ({ ...prev, logo_path: '' }));
     };
 
     const handleSave = async () => {
@@ -84,17 +62,10 @@ const SupplierForm = forwardRef(({ selectedId, onSuccess }, ref) => {
         try {
             const res = await supplierService.createSupplier(formData);
             if (res.status === 'success') {
-                if (logoFile) {
-                    await supplierService.uploadLogo(res.id, logoFile);
-                }
-                alert(res.message);
-                onSuccess();
-            } else {
-                alert(res.message);
-            }
-        } catch (err) {
-            console.error(err);
-        }
+                if (logoFile) await supplierService.uploadLogo(res.id, logoFile);
+                alert(res.message); onSuccess();
+            } else { alert(res.message); }
+        } catch (err) { console.error(err); }
     };
 
     const handleUpdate = async () => {
@@ -102,17 +73,10 @@ const SupplierForm = forwardRef(({ selectedId, onSuccess }, ref) => {
         try {
             const res = await supplierService.updateSupplier(selectedId, formData);
             if (res.status === 'success') {
-                if (logoFile) {
-                    await supplierService.uploadLogo(selectedId, logoFile);
-                }
-                alert(res.message);
-                onSuccess();
-            } else {
-                alert(res.message);
-            }
-        } catch (err) {
-            console.error(err);
-        }
+                if (logoFile) await supplierService.uploadLogo(selectedId, logoFile);
+                alert(res.message); onSuccess();
+            } else { alert(res.message); }
+        } catch (err) { console.error(err); }
     };
 
     const handleDelete = async () => {
@@ -120,16 +84,9 @@ const SupplierForm = forwardRef(({ selectedId, onSuccess }, ref) => {
         if (window.confirm("Are you sure you want to delete this supplier?")) {
             try {
                 const res = await supplierService.deleteSupplier(selectedId);
-                if (res.status === 'success') {
-                    alert(res.message);
-                    clearForm();
-                    onSuccess();
-                } else {
-                    alert(res.message);
-                }
-            } catch (err) {
-                console.error(err);
-            }
+                if (res.status === 'success') { alert(res.message); clearForm(); onSuccess(); }
+                else { alert(res.message); }
+            } catch (err) { console.error(err); }
         }
     };
 
@@ -139,8 +96,8 @@ const SupplierForm = forwardRef(({ selectedId, onSuccess }, ref) => {
                 <User size={16} /> Supplier Details
             </div>
             
-            <div className="form-grid">
-                {/* Left Column: General Information */}
+            <div className="form-grid" style={{ overflowY: 'auto', paddingBottom: '15px' }}>
+                {/* Left Column */}
                 <div>
                     <div className="form-group">
                         <label className="form-label">Supplier Code <span className="required-label">*</span></label>
@@ -149,117 +106,70 @@ const SupplierForm = forwardRef(({ selectedId, onSuccess }, ref) => {
                             <button className="btn-nav" style={{ padding: '0 8px' }}><Search size={14} /></button>
                         </div>
                     </div>
-                    <div className="form-group">
-                        <label className="form-label">Supplier Name <span className="required-label">*</span></label>
-                        <input type="text" name="supplier_name" value={formData.supplier_name} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">Short Name</label>
-                        <input type="text" name="short_name" value={formData.short_name} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">Category</label>
-                        <select name="category" value={formData.category} onChange={handleChange}>
-                            <option value="Tyre & Accessories">Tyre & Accessories</option>
-                            <option value="Spare Parts">Spare Parts</option>
-                            <option value="Lubricants">Lubricants</option>
-                        </select>
-                    </div>
-                    <div className="form-group" style={{ marginTop: '15px' }}>
-                        <label className="form-label">Contact Person</label>
-                        <input type="text" name="contact_person" value={formData.contact_person} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">Designation</label>
-                        <input type="text" name="designation" value={formData.designation} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">Phone 1</label>
-                        <input type="text" name="phone_1" value={formData.phone_1} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">Phone 2</label>
-                        <input type="text" name="phone_2" value={formData.phone_2} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">Email</label>
-                        <input type="email" name="email" value={formData.email} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">Website</label>
-                        <input type="text" name="website" value={formData.website} onChange={handleChange} />
-                    </div>
+                    <div className="form-group"><label className="form-label">Supplier Name <span className="required-label">*</span></label><input type="text" name="supplier_name" value={formData.supplier_name} onChange={handleChange} /></div>
+                    <div className="form-group"><label className="form-label">Short Name</label><input type="text" name="short_name" value={formData.short_name} onChange={handleChange} /></div>
+                    <div className="form-group"><label className="form-label">Category</label><select name="category" value={formData.category} onChange={handleChange}><option value="Tyre & Accessories">Tyre & Accessories</option><option value="Spare Parts">Spare Parts</option><option value="Lubricants">Lubricants</option></select></div>
+                    <div className="form-group" style={{ marginTop: '15px' }}><label className="form-label">Contact Person</label><input type="text" name="contact_person" value={formData.contact_person} onChange={handleChange} /></div>
+                    <div className="form-group"><label className="form-label">Designation</label><input type="text" name="designation" value={formData.designation} onChange={handleChange} /></div>
+                    <div className="form-group"><label className="form-label">Phone 1</label><input type="text" name="phone_1" value={formData.phone_1} onChange={handleChange} /></div>
+                    <div className="form-group"><label className="form-label">Phone 2</label><input type="text" name="phone_2" value={formData.phone_2} onChange={handleChange} /></div>
+                    <div className="form-group"><label className="form-label">Email</label><input type="email" name="email" value={formData.email} onChange={handleChange} /></div>
+                    <div className="form-group"><label className="form-label">Website</label><input type="text" name="website" value={formData.website} onChange={handleChange} /></div>
                 </div>
 
-                {/* Right Column: Logo, Address, Financial */}
+                {/* Right Column */}
                 <div>
-                    {/* Logo Section - Adjusted marginLeft to 120px to perfectly align with the Address input below */}
-                    <div style={{ display: 'flex', gap: '15px', marginBottom: '10px', marginLeft: '120px' }}>
-                        <div style={{ width: '60px', height: '60px', border: '1px solid #ccc', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', backgroundColor: '#fff' }}>
+                    {/* Logo Upload Section - Moved to the right with square design */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px', marginLeft: '60px' }}>
+                        
+                        {/* 1. Logo Box */}
+                        <div style={{ 
+                            width: '100px', 
+                            height: '100px', 
+                            borderRadius: '6px', 
+                            border: '1px dashed #ccc', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            backgroundColor: '#f8f9fa',
+                            overflow: 'hidden'
+                        }}>
                             {logoPreview ? (
                                 <img src={logoPreview} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
-                                <span style={{ color: '#aaa', fontSize: '9px' }}>No Logo</span>
+                                <span style={{ fontSize: '12px', color: '#aaa' }}>No Logo</span>
                             )}
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', justifyContent: 'center' }}>
-                            <label className="action-btn btn-nav" style={{ cursor: 'pointer', padding: '3px 10px', fontSize: '11px' }}>
-                                <Upload size={12} /> Add Logo
-                                <input type="file" style={{ display: 'none' }} accept="image/*" onChange={handleLogoChange} />
-                            </label>
-                            <button type="button" className="action-btn btn-nav" onClick={removeLogo} style={{ padding: '3px 10px', fontSize: '11px' }}>
-                                <Trash2 size={12} /> Remove
-                            </button>
-                        </div>
-                    </div>
 
-                    {/* Address Section */}
-                   <div className="form-group">
-                     <label className="form-label">Address</label>
-                     <textarea name="address" value={formData.address} onChange={handleChange} rows="2" style={{ flex: 1, resize: 'none' }} />
+                        {/* 2. Add/Remove Buttons */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                             <label className="action-btn btn-nav" style={{ 
+                              cursor: 'pointer', padding: '6px 15px', fontSize: '12px', fontWeight: 'bold', minWidth: '100px', justifyContent: 'center' 
+                        }}>
+                            <Upload size={14} style={{ marginRight: '6px' }} /> Add Logo
+                            <input type="file" style={{ display: 'none' }} accept="image/*" onChange={handleLogoChange} />
+                           </label>
+    
+                         <button type="button" className="action-btn btn-nav" onClick={removeLogo} style={{ 
+                            padding: '6px 15px', fontSize: '12px', fontWeight: 'bold', minWidth: '100px', justifyContent: 'center' 
+                     }}>
+                               <Trash2 size={14} style={{ marginRight: '6px' }} /> Remove
+                      </button>
                    </div>
-                    
-                    <div className="form-group">
-                        <label className="form-label">City</label>
-                        <input type="text" name="city" value={formData.city} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">District</label>
-                        <select name="district" value={formData.district} onChange={handleChange}>
-                            <option value="Colombo">Colombo</option>
-                            <option value="Gampaha">Gampaha</option>
-                            <option value="Rathnapura">Rathnapura</option>
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">Postal Code</label>
-                        <input type="text" name="postal_code" value={formData.postal_code} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">Country</label>
-                        <input type="text" name="country" value={formData.country} onChange={handleChange} />
+                        
                     </div>
 
-                    {/* Financial Section */}
-                    <div className="form-group" style={{ marginTop: '15px' }}>
-                        <label className="form-label">Tax No / VAT No</label>
-                        <input type="text" name="tax_no" value={formData.tax_no} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">Credit Limit (Rs.)</label>
-                        <input type="number" step="0.01" name="credit_limit" value={formData.credit_limit} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label className="form-label">Payment Term (Days)</label>
-                        <input type="number" name="payment_term" value={formData.payment_term} onChange={handleChange} />
-                    </div>
+                    <div className="form-group"><label className="form-label">Address</label><textarea name="address" value={formData.address} onChange={handleChange} rows="3" style={{ flex: 1, resize: 'none' }} /></div>
+                    <div className="form-group"><label className="form-label">City</label><input type="text" name="city" value={formData.city} onChange={handleChange} /></div>
+                    <div className="form-group"><label className="form-label">District</label><select name="district" value={formData.district} onChange={handleChange}><option value="Colombo">Colombo</option><option value="Gampaha">Gampaha</option></select></div>
+                    <div className="form-group"><label className="form-label">Postal Code</label><input type="text" name="postal_code" value={formData.postal_code} onChange={handleChange} /></div>
+                    <div className="form-group"><label className="form-label">Country</label><input type="text" name="country" value={formData.country} onChange={handleChange} /></div>
                     
-                    {/* Right-aligned Active Checkbox */}
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '5px' }}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '11px', fontWeight: '500' }}>
-                            <input type="checkbox" name="is_active" checked={formData.is_active === 1} onChange={handleChange} />
-                            Active
-                        </label>
+                    <div className="form-group" style={{ marginTop: '15px' }}><label className="form-label">Tax No / VAT No</label><input type="text" name="tax_no" value={formData.tax_no} onChange={handleChange} /></div>
+                    <div className="form-group"><label className="form-label">Credit Limit (Rs.)</label><input type="number" step="0.01" name="credit_limit" value={formData.credit_limit} onChange={handleChange} /></div>
+                    <div className="form-group"><label className="form-label">Payment Term (Days)</label><input type="number" name="payment_term" value={formData.payment_term} onChange={handleChange} /></div>
+                    <div className="form-group" style={{ justifyContent: 'flex-end', marginTop: '5px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}><input type="checkbox" name="is_active" checked={formData.is_active === 1} onChange={handleChange} /> Active</label>
                     </div>
                 </div>
             </div>
