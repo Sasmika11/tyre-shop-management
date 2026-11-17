@@ -38,7 +38,7 @@ const SupplierForm = forwardRef(({ selectedId, onSuccess }, ref) => {
             const res = await supplierService.getSupplierById(id);
             if (res.status === 'success') {
                 setFormData(res.data);
-                setLogoPreview(res.data.logo_path ? `http://localhost/tyre-shop-backend/${res.data.logo_path}` : null);
+                setLogoPreview(res.data.logo_path ? `http://localhost/tyre-shop-management/backend/${res.data.logo_path}` : null);
             }
         } catch (err) { console.error(err); }
     };

@@ -60,7 +60,7 @@ const Documents = ({ supplierId }) => {
 
     const handleView = () => {
         if (!selectedDoc) return;
-        window.open(`http://localhost/tyre-shop-backend/${selectedDoc.file_path}`, '_blank');
+        window.open(`http://localhost/tyre-shop-management/backend/${selectedDoc.file_path}`, '_blank');
     };
 
     return (
